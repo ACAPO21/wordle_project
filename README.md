@@ -58,7 +58,6 @@ wordle_project/
 ├── src/
 │   ├── game.py          # Logique principale du jeu
 │   ├── word_list.py     # Liste des mots disponibles
-│   └── utils.py         # Utilitaires
 ├── tests/
 │   ├── test_game.py     # Tests unitaires
 │   └── __init__.py
