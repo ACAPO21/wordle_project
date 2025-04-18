@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 from io import StringIO
 import os 
 import sys
+import coverage
 
 # Ajouter le répertoire parent au PYTHONPATH
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,11 +56,11 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("A", feedback)
-        self.assertIn("P", feedback)
-        self.assertIn("P", feedback)
-        self.assertIn("L", feedback)
-        self.assertIn("E", feedback)
+        
+        # Vérifier que toutes les lettres sont en vert
+        for letter in guess:
+            colored_letter = self.game.color_text(letter, "green")
+            self.assertIn(colored_letter, feedback)
         print("✓ Test réussi")
 
     def test_get_feedback_some_correct(self):
@@ -68,11 +69,20 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("A", feedback)
-        self.assertIn("P", feedback)
-        self.assertIn("R", feedback)
-        self.assertIn("I", feedback)
-        self.assertIn("C", feedback)
+        
+        # Vérifier les lettres correctes (vertes)
+        green_A = self.game.color_text("A", "green")
+        green_P = self.game.color_text("P", "green")
+        self.assertIn(green_A, feedback)
+        self.assertIn(green_P, feedback)
+        
+        # Vérifier les lettres absentes (grises)
+        gray_R = self.game.color_text("R", "gray")
+        gray_I = self.game.color_text("I", "gray")
+        gray_C = self.game.color_text("C", "gray")
+        self.assertIn(gray_R, feedback)
+        self.assertIn(gray_I, feedback)
+        self.assertIn(gray_C, feedback)
         print("✓ Test réussi")
 
     def test_get_feedback_repeated_letters(self):
@@ -81,10 +91,19 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("P", feedback)
-        self.assertIn("A", feedback)
-        self.assertIn("E", feedback)
-        self.assertIn("R", feedback)
+        
+        # Vérifier les couleurs exactes
+        yellow_P1 = self.game.color_text("P", "yellow")
+        yellow_A = self.game.color_text("A", "yellow")
+        green_P2 = self.game.color_text("P", "green")
+        yellow_E = self.game.color_text("E", "yellow")
+        gray_R = self.game.color_text("R", "gray")
+        
+        self.assertIn(yellow_P1, feedback)
+        self.assertIn(yellow_A, feedback)
+        self.assertIn(green_P2, feedback)
+        self.assertIn(yellow_E, feedback)
+        self.assertIn(gray_R, feedback)
         print("✓ Test réussi")
 
     def test_get_feedback_all_wrong(self):
@@ -93,11 +112,19 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("Q", feedback)
-        self.assertIn("W", feedback)
-        self.assertIn("E", feedback)
-        self.assertIn("R", feedback)
-        self.assertIn("T", feedback)
+        
+        # Vérifier que toutes les lettres sont en gris sauf E qui est jaune
+        gray_Q = self.game.color_text("Q", "gray")
+        gray_W = self.game.color_text("W", "gray")
+        yellow_E = self.game.color_text("E", "yellow")  # E est dans le mot mais mal placé
+        gray_R = self.game.color_text("R", "gray")
+        gray_T = self.game.color_text("T", "gray")
+        
+        self.assertIn(gray_Q, feedback)
+        self.assertIn(gray_W, feedback)
+        self.assertIn(yellow_E, feedback)
+        self.assertIn(gray_R, feedback)
+        self.assertIn(gray_T, feedback)
         print("✓ Test réussi")
 
     def test_color_text(self):
@@ -152,7 +179,6 @@ class TestGame(unittest.TestCase):
         result = self.game.validate_guess(word)
         print(f"Résultat: {result}")
         self.assertIn("Le mot ne doit contenir que des lettres.", result)
-        print(result)
         print("✓ Test réussi")
 
     def test_validate_guess_empty(self):
@@ -197,6 +223,5 @@ class TestGame(unittest.TestCase):
         print("✓ Test réussi")
 
 if __name__ == "__main__":
-
-    unittest.main(exit=False)
+    unittest.main()
     
