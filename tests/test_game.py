@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 from io import StringIO
 import os 
 import sys
-import coverage
 
 # Ajouter le répertoire parent au PYTHONPATH
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -69,11 +68,11 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("A", feedback)  # A est correct
-        self.assertIn("P", feedback)  # P est correct
-        self.assertIn("R", feedback)  # R n'est pas dans le mot
-        self.assertIn("I", feedback)  # I n'est pas dans le mot
-        self.assertIn("C", feedback)  # C n'est pas dans le mot
+        self.assertIn("A", feedback)
+        self.assertIn("P", feedback)
+        self.assertIn("R", feedback)
+        self.assertIn("I", feedback)
+        self.assertIn("C", feedback)
         print("✓ Test réussi")
 
     def test_get_feedback_repeated_letters(self):
@@ -82,10 +81,10 @@ class TestGame(unittest.TestCase):
         print(f"Tentative: {guess}")
         feedback = self.game.get_feedback(guess)
         print(f"Feedback: {feedback}")
-        self.assertIn("P", feedback)  # P est dans le mot
-        self.assertIn("A", feedback)  # A est correct
-        self.assertIn("E", feedback)  # E est dans le mot
-        self.assertIn("R", feedback)  # R n'est pas dans le mot
+        self.assertIn("P", feedback)
+        self.assertIn("A", feedback)
+        self.assertIn("E", feedback)
+        self.assertIn("R", feedback)
         print("✓ Test réussi")
 
     def test_get_feedback_all_wrong(self):
@@ -96,7 +95,7 @@ class TestGame(unittest.TestCase):
         print(f"Feedback: {feedback}")
         self.assertIn("Q", feedback)
         self.assertIn("W", feedback)
-        self.assertIn("E", feedback)  # E est dans le mot
+        self.assertIn("E", feedback)
         self.assertIn("R", feedback)
         self.assertIn("T", feedback)
         print("✓ Test réussi")
@@ -198,15 +197,6 @@ class TestGame(unittest.TestCase):
         print("✓ Test réussi")
 
 if __name__ == "__main__":
-    # Démarrer le coverage
-    cov = coverage.Coverage()
-    cov.start()
-    
-    # Lancer les tests
+
     unittest.main(exit=False)
     
-    # Arrêter le coverage et afficher le rapport
-    cov.stop()
-    cov.save()
-    print("\n📊 Rapport de couverture :")
-    cov.report()

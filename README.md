@@ -38,7 +38,7 @@ python main.py
 
 Pour lancer les tests :
 ```bash
-python -m unittest discover -s tests
+coverage run -m unittest tests/test_game.py && coverage report -m 
 ```
 
 ## 🧪 Tests
