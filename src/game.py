@@ -8,6 +8,7 @@ class Game:
         self.debug = debug
         if debug:
             print(f"Mot à trouver : {self.target_word}")
+        print(f"Mot à trouver : {self.target_word}")
 
     def get_feedback(self, guess):
         """Retourne le feedback pour une tentative donnée."""
@@ -79,7 +80,3 @@ class Game:
 
         print(f"\nPerdu ! Le mot était : {self.target_word}")
         return False
-
-if __name__ == "__main__":
-    game = Game(debug=True)
-    game.start()

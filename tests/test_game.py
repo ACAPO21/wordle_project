@@ -3,13 +3,13 @@ from unittest.mock import patch, MagicMock
 from io import StringIO
 import os 
 import sys
+import coverage
 
 # Ajouter le répertoire parent au PYTHONPATH
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
-# Importer les modules après avoir configuré le PYTHONPATH
 from src.game import Game
 from src.word_list import Wordlist
 
@@ -32,6 +32,23 @@ class TestGame(unittest.TestCase):
     def setUp(self):
         self.game = Game(debug=False)
         print(f"\nMot cible: {self.game.target_word}")
+
+    def test_debug_mode(self):
+        """Test le mode debug du jeu."""
+        print("\nTest : Mode debug")
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            game = Game(debug=True)
+            self.assertIn("Mot à trouver", mock_stdout.getvalue())
+        print("✓ Test réussi")
+
+    def test_wordlist(self):
+        """Test la classe Wordlist."""
+        print("\nTest : Wordlist")
+        wordlist = Wordlist()
+        word = wordlist.get_random_word()
+        self.assertIsInstance(word, str)
+        self.assertEqual(len(word), 5)
+        print("✓ Test réussi")
 
     def test_get_feedback_all_correct(self):
         print("\nTest : Toutes les lettres sont correctes")
@@ -136,6 +153,7 @@ class TestGame(unittest.TestCase):
         result = self.game.validate_guess(word)
         print(f"Résultat: {result}")
         self.assertIn("Le mot ne doit contenir que des lettres.", result)
+        print(result)
         print("✓ Test réussi")
 
     def test_validate_guess_empty(self):
@@ -180,4 +198,15 @@ class TestGame(unittest.TestCase):
         print("✓ Test réussi")
 
 if __name__ == "__main__":
-    unittest.main()
+    # Démarrer le coverage
+    cov = coverage.Coverage()
+    cov.start()
+    
+    # Lancer les tests
+    unittest.main(exit=False)
+    
+    # Arrêter le coverage et afficher le rapport
+    cov.stop()
+    cov.save()
+    print("\n📊 Rapport de couverture :")
+    cov.report()
